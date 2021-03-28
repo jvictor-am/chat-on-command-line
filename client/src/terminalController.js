@@ -1,18 +1,17 @@
 import ComponentsBuilder from './components.js'
 import { constants } from './constants.js'
 
-
 export default class TerminalController {
     #usersCollors = new Map()
 
-    constructor() {}
+    constructor() { }
 
     #pickCollor() {
         return `#${((1 << 24) * Math.random() | 0).toString(16)}-fg`
     }
 
     #getUserCollor(userName) {
-        if(this.#usersCollors.has(userName))
+        if (this.#usersCollors.has(userName))
             return this.#usersCollors.get(userName)
 
         const collor = this.#pickCollor()
@@ -24,7 +23,7 @@ export default class TerminalController {
     #onInputReceived(eventEmitter) {
         return function () {
             const message = this.getValue()
-            console.log(message)
+            eventEmitter.emit(constants.events.app.MESSAGE_SENT, message)
             this.clearValue()
         }
     }
@@ -32,7 +31,7 @@ export default class TerminalController {
     #onMessageReceived({ screen, chat }) {
         return msg => {
             const { userName, message } = msg
-            const collor = this.#getUserCollor(userName) 
+            const collor = this.#getUserCollor(userName)
 
             chat.addItem(`{${collor}}{bold}${userName}{/}: ${message}`)
 
@@ -43,7 +42,7 @@ export default class TerminalController {
     #onLogChanged({ screen, activityLog }) {
         return msg => {
             const [userName] = msg.split(/\s/)
-            const collor = this.#getUserCollor(userName) 
+            const collor = this.#getUserCollor(userName)
 
             activityLog.addItem(`{${collor}}{bold}${msg.toString()}{/}`)
 
@@ -55,9 +54,9 @@ export default class TerminalController {
         return users => {
 
             const { content } = status.items.shift()
-            status.clearItems()            
+            status.clearItems()
             status.addItem(content)
-        
+
             users.forEach(userName => {
                 const collor = this.#getUserCollor(userName)
                 status.addItem(`{${collor}}{bold}${userName}{/}`)
@@ -87,21 +86,5 @@ export default class TerminalController {
 
         components.input.focus()
         components.screen.render()
-
-        setInterval(() => {
-            const users = ['jvzinhooooooo']
-            // eventEmitter.emit(constants.events.app.MESSAGE_RECEIVED, { message: 'Hello motherfuckers!!!', userName: 'pabloescobar' })
-            // eventEmitter.emit(constants.events.app.MESSAGE_RECEIVED, { message: 'Whatsaaap bitch!!!', userName: 'maryzinha' })
-            // eventEmitter.emit(constants.events.app.MESSAGE_RECEIVED, { message: 'Heeey!!!', userName: 'jvzinho' })
-            // eventEmitter.emit(constants.events.app.ACTIVITYLOG_UPDATED, 'pabloescobar join')
-            // eventEmitter.emit(constants.events.app.ACTIVITYLOG_UPDATED, 'pabloescobar left')
-            // eventEmitter.emit(constants.events.app.ACTIVITYLOG_UPDATED, 'maryzinha join')
-            eventEmitter.emit(constants.events.app.STATUS_UPDATED, users)
-            users.push('maryzinha')
-            eventEmitter.emit(constants.events.app.STATUS_UPDATED, users)
-            users.push('capitaoamerica', 'ant-man')
-            eventEmitter.emit(constants.events.app.STATUS_UPDATED, users)
-            users.push('vozao', 'abc0000')
-        }, 2000)
     }
 }

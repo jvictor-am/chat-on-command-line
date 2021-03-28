@@ -72,24 +72,24 @@ export default class ComponentsBuilder {
             align: 'left',
             width: '50%',
             height: '90%',
-            items:['{bold}Messenger{/}']
+            items: ['{bold}Messenger{/}']
         })
-        
+
         return this
     }
-    
+
     setStatusComponent() {
         this.#status = blessed.list({
             ...this.#baseComponent(),
             parent: this.#layout,
             width: '25%',
             height: '90%',
-            items:['{bold}Users on Room{/}']
+            items: ['{bold}Users on Room{/}']
         })
-        
+
         return this
     }
-    
+
     setActivityLogComponent() {
         this.#activityLog = blessed.list({
             ...this.#baseComponent(),
@@ -99,9 +99,9 @@ export default class ComponentsBuilder {
             style: {
                 fg: 'yellow'
             },
-            items:['{bold}Activity Log{/}']
+            items: ['{bold}Activity Log{/}']
         })
-        
+
         return this
     }
 
